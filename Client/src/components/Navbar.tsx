@@ -1,11 +1,26 @@
 import { NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-interface navbarProps {
-  showcart?:boolean;
-  showdashboard?:boolean;
+interface RootState {
+  cart: {
+    list: Array<{
+      _id: string;
+      title: string;
+      price: number;
+      imageUrl: string;
+      quantity: number;
+    }>;
+  };
 }
 
-export default function Navbar({showcart = true,showdashboard = false} : navbarProps) {
+interface navbarProps {
+  showcart?: boolean;
+  showdashboard?: boolean;
+}
+
+export default function Navbar({ showcart = true, showdashboard = false }: navbarProps) {
+  const cartItems = useSelector((state: RootState) => state.cart.list);
+  const totalItemsCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
@@ -21,16 +36,22 @@ export default function Navbar({showcart = true,showdashboard = false} : navbarP
           <div>
             <ul className="flex items-center space-x-8">
               {showdashboard && (
-               <li>
-                <NavLink 
-                className= {({isActive}) => isActive ? 'text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1 cursor-pointer' : 'text-gray-600 hover:text-emerald-600 font-medium cursor-pointer transition' } 
-                to="/dashboard" >Dashboard</NavLink>
-              </li>
+                <li>
+                  <NavLink 
+                    className={({ isActive }) => isActive ? 'text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1 cursor-pointer' : 'text-gray-600 hover:text-emerald-600 font-medium cursor-pointer transition'} 
+                    to="/dashboard"
+                  >
+                    Dashboard
+                  </NavLink>
+                </li>
               )}
               <li>
                 <NavLink 
-                className= {({isActive}) => isActive ? 'text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1 cursor-pointer' : 'text-gray-600 hover:text-emerald-600 font-medium cursor-pointer transition' } 
-                to="/shop">Shop</NavLink> 
+                  className={({ isActive }) => isActive ? 'text-emerald-600 font-semibold border-b-2 border-emerald-600 pb-1 cursor-pointer' : 'text-gray-600 hover:text-emerald-600 font-medium cursor-pointer transition'} 
+                  to="/shop"
+                >
+                  Shop
+                </NavLink> 
               </li>
             </ul>
           </div>
@@ -52,7 +73,7 @@ export default function Navbar({showcart = true,showdashboard = false} : navbarP
                     <span>🛒</span>
                     <span>Cart</span>
                     <span className="bg-emerald-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                      0
+                      {totalItemsCount}
                     </span>
                   </NavLink>
                 </li>
