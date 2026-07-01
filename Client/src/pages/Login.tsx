@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function Login() {
+  const navigate = useNavigate();
   const userNameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ export default function Login() {
     const password = passwordRef.current?.value;
 
     if (!email || !password) {
-      setError("Plese Insert all the details!");
+      setError("Please insert all the details!");
       return;
     }
 
@@ -39,8 +40,9 @@ export default function Login() {
 
       localStorage.setItem('userToken', data.token);
       
-      alert("login succesfull 🎉");
       console.log("Logged in user details:", data.user);
+
+      navigate('/dashboard'); 
 
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -107,7 +109,10 @@ export default function Login() {
         </form>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          Don't have an account? <span className="text-purple-400 hover:underline cursor-pointer">Register</span>
+          Don't have an account?{' '}
+          <Link to="/signup" className="text-purple-400 hover:underline cursor-pointer">
+            Register
+          </Link>
         </p>
 
       </div>
